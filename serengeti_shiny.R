@@ -1,4 +1,4 @@
-# Gorongosa Camera Trap Data Shiny App
+# Serengeti Camera Trap Data Shiny App
 
 library(tidyverse); library(shiny); library(shinythemes); library(reshape)
 library(overlap); library(plotly); library(here); library(scales); library(plyr)
@@ -54,7 +54,7 @@ camera_metadata <- camera_metadata[!duplicated(camera_metadata),]
 # FOR NOW, average to single value 
 camera_metadata <-ddply(camera_metadata, .(site, X.Coord, Y.Coord, River_Distance, Kopje_Distance, Road_Distance, `Percent_Tree Cover`), summarise, Lion_Density = mean(Lion_Density))
 
-# also one issue with moved site (although x and y coords same...?)
+# also one issue with moved site 
 x <- camera_metadata[camera_metadata$site == "C07",]
 x <- ddply(x, .(site, X.Coord, Y.Coord), summarise, River_Distance = mean(River_Distance), Kopje_Distance = mean(Kopje_Distance), Lion_Density = mean(Lion_Density), Road_Distance = mean(Road_Distance), `Percent_Tree Cover` = mean(`Percent_Tree Cover`))
 camera_metadata <- camera_metadata[!camera_metadata$site == "C07",]
@@ -123,23 +123,6 @@ overlapPlot2 <- function (A, B, xscale = 24, linetype = c(1, 1), linecol = c("#F
 
 
 # Define RAI functions -----------------------------------------------------
-
-# Define unique classification categories. We will need this later to ensure these columns are present in all tables
-# There is probably a better way to do this that is not so hard-coded and uses unique(records$Species) but I can't figure it out
-allclassifications <- c(Baboon = NA_real_, Buffalo = NA_real_, Elephant = NA_real_, 
-                        `Thomson's Gazelle` = NA_real_, Impala = NA_real_, `Bird (Unidentified)` = NA_real_, 
-                        Warthog = NA_real_, Wildebeest = NA_real_, Zebra = NA_real_, Giraffe = NA_real_, 
-                        `Spotted Hyena` = NA_real_, `Grant's Gazelle` = NA_real_, Hare = NA_real_, 
-                        Reedbuck = NA_real_, Cheetah = NA_real_, Eland = NA_real_, `Guinea Fowl` = NA_real_, 
-                        Hartebeest = NA_real_, `Insect or Spider` = NA_real_, Ostrich = NA_real_, 
-                        Porcupine = NA_real_, Jackal = NA_real_, Hippopotamus = NA_real_, `Dik Dik` = NA_real_, 
-                        `Kori Bustard` = NA_real_, Topi = NA_real_, `Lion (Male)` = NA_real_, Leopard = NA_real_,
-                        Aardwolf = NA_real_, Cattle = NA_real_, Civet = NA_real_, Waterbuck = NA_real_, 
-                        `Vervet Monkey` = NA_real_, Aardvark = NA_real_, Mongoose = NA_real_, 
-                        `Lion (Female or Cub)` = NA_real_, `Honey Badger` = NA_real_, Duiker = NA_real_, 
-                        Zorilla = NA_real_, `Bat-Eared Fox` = NA_real_, Caracal = NA_real_, 
-                        `Reptiles or Amphibians` = NA_real_, Rhinoceros = NA_real_, Rodents = NA_real_, 
-                        Vulture = NA_real_)  
 
 # define RAI calculation function - using record table that has ALREADY BEEN SUBSET
 rai.calculate <- function(record.table.subset, camop, start.date, end.date) {
@@ -228,43 +211,7 @@ rai.monthly <- function(record.table.subset, camop, start.date, end.date) {
   
 }
 
-# count records by month, for individual cameras and for all combined
-# does NOT control for differences in operation date
-
-record.count.monthly <- function(record.table.subset) {
-  
-  # calculate number of observations of each classification type at each camera
-  record_count <- record.table.subset %>%
-    dplyr::group_by(species, site, Month) %>%
-    dplyr::summarise(Detections = n()) %>%  # counts total number of animals of each species    
-    spread(key = species, value = Detections)  # gets from long to wide format  
-  
-  # add columns for classes not present
-  record_count <- add_column(record_count, !!!allclassifications[!names(allclassifications) %in% names(record_count)])
-  
-  # gather data so each class-camera-month is its own row again
-  record_count <- record_count %>% 
-    gather(3:ncol(record_count), key = "species", value = "Count")
-  
-  # replace NA with 0 
-  record_count[is.na(record_count)] <- 0
-  
-  # calculate for all cameras combined for each month-year
-  record_count_all <- record_count %>%
-    dplyr::group_by(species, Month) %>%
-    dplyr::summarise(Count = sum(Count)) 
-  
-  # add "camera" column
-  record_count_all$Camera <- "All"
-  
-  # join the total to the camera
-  record_count <- dplyr::bind_rows(record_count, record_count_all)
-  
-  return(record_count)
-  
-}
-
-# define occupancu model function 
+# define occupancy model function 
 #   om.calculate(records_subset, camera_operation, date_range[1], date_range[2], om_cov, detection_window, camera_metadata)
 om.calculate <- function(record.table.subset, camop, start.date, end.date, covariate, window, cam_covs){
  
