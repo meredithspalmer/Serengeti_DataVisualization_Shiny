@@ -18,7 +18,7 @@ sidebar <- dashboardSidebar(
     tags$footer(
         p(
             "Maintained by ",
-            a(href = 'https://www.meredithspalmer.weebly.com', "Meredith S. Palmer.")
+            a(href = 'https://www.meredithspalmer.weebly.com', "Dr. Meredith S. Palmer.")
         ),
         
         align = "left",
@@ -69,8 +69,8 @@ body <- dashboardBody(
                     a(href = 'https://www.snapshotserengeti.org', "Snapshot Serengeti."), "Raw data can be
                     accessed at the", a(href = 'http://lila.science/datasets/snapshot-serengeti', "LILA image
                                         repository."), 
-                    "Please contact Meredith Palmer for additional information, (meta)data, or questions about
-                    collaborations.")), 
+                    "Please contact", a(href = 'mailto:palme516@umn.edu', 'Dr. Meredith Palmer'), "for additional 
+                    information, (meta)data, or questions about collaborations.")), 
             
             fluidRow(
                 box(title = "Funding and collaboration",
@@ -185,7 +185,7 @@ tabItem(
             there is only ONE covariate on occupancy and NO covariates ondetection probability. More 
             in-depth analyses examining how habitat features affect occupancy and detection are strongly 
             recommended. Note: these calculations may fail if date range selected is too large. Consider
-            what makes a `closed` season when selecting date range.", 
+            what time period makes a `closed` season when selecting date range.", 
             br(), 
             br(),
             
@@ -205,12 +205,12 @@ tabItem(
             
             plotlyOutput(outputId = "rai_metadata"),
             "All distance covariates are in meters. Please contact Meredith Palmer if you are interested 
-                    in how these data layers were generated, or have additional spatial covariates to contribute."), 
+             in how these data layers were generated, or have additional spatial covariates to contribute."), 
         
         box(title = "Diel activity pattern",
             collapsible = TRUE,
             "Kernel density distribution of the timing of the detections across all cameras across 
-                    the 24-hour period. All times are scaled to solar time based on the date of the detection.",
+             the 24-hour period. All times are scaled to solar time based on the date of the detection.",
             plotOutput(outputId = "activity_plot"))
     ),
     
@@ -219,11 +219,11 @@ tabItem(
         box(title = "RAI over time: months",
             collapsible = TRUE,
             "Monthly RAI for the selected time period, calculated for the entire grid network (total
-                    detections per total trap-nights across all operating cameras). An RAI of 0 indicates that 
-                    there were no detections during that month.",
+             detections per total trap-nights across all operating cameras). An RAI of 0 indicates that 
+             here were no detections during that month.",
             plotlyOutput(outputId = "monthly_rai_hist"))
         
-       ##put years here soon
+       ##nb: put years here soon
         
         )),
     
