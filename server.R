@@ -353,7 +353,7 @@ server <- function(input, output, session) {
     # render a reactive graph with the activity patterns of the selected species
     output$activity_plot_compare <- renderPlot({
         overlapPlot2(records_subset_A()$Time.Sun, records_subset_B()$Time.Sun)
-        legend('top', c("Subset A", "Subset B"), lty=c(1,1), col = c("#F8766D", "#00BFC4"), bty='n')
+        legend('topleft', c("Subset A", "Subset B"), lty=c(1,1), col = c("#F8766D", "#00BFC4"), bty='n')
     })  
     
     # calculate overlap value
