@@ -27,13 +27,6 @@ server <- function(input, output, session) {
     
     # Summarize subset data ----------------------
     
-    # summarize species counts aross cameras 
-    species_summary <- reactive({
-        records_subset() %>%
-            group_by(site) %>%
-            dplyr::summarise(detections = n(), counts = sum(count)) 
-    })
-    
     # calculate RAI
     rai <- reactive({
         rai.calculate(records_subset(), camera_operation, input$date_range[1], input$date_range[2])
@@ -264,11 +257,6 @@ server <- function(input, output, session) {
     
     
     # Render outputs -----------------------------
-    
-    # render a reactive table that shows a summary by species
-    output$species_table <- renderTable({
-        species_summary()
-    })
     
     # render a reactive graph with RAI against other variable
     output$rai_metadata <- renderPlotly({
