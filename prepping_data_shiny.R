@@ -7,8 +7,7 @@ library(Hmisc)
 
 # Import and merge data, covariates -----------------------------------------------
 
-setwd("~/Desktop/Grad School/Code/Serengeti_Shiny")
-dat <- read.csv("../../Lions/Databases/CT_Official/SER_S1-12/SER_S1-12_completeconsensus.csv") #sample_dat_serengeti.csv")
+dat <- read.csv("sample_dat_serengeti.csv")
 dat <- dat[dat$season %in% c("S01", "S02", "S03", "S04"),]
 dat <- dat[c("subject_id", "season", "site", "capture_date_local", "capture_time_local", "question__species", "question__count_median", "question__standing", "question__resting", "question__moving", "question__eating", "question__interacting", "question__young_present", "pielous_evenness_index")]
 names(dat)[c(2, 4:14)] <- c("data.season", "date", "time", "species", "count", "standing", "resting", "moving", "eating", "interacting", "young_present", "evenness")
